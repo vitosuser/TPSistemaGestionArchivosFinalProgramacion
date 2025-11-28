@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GestorDeArchivosDeTexto
 {
-    internal class GeneradorReporte
+    internal class GeneradorReportes
     {
     }
 }
