@@ -8,6 +8,7 @@ namespace GestorDeArchivosDeTexto
 {
     public class Menu
     {
+        static GestorArchivos gestor = new GestorArchivos();
         public static void menuPrincipal()
         {
             bool salir = false;
@@ -86,12 +87,95 @@ namespace GestorDeArchivosDeTexto
 
         static void EliminarArchivo()
         {
+            Console.WriteLine("\n--------------------------ELIMINAR ARCHIVO-------------------------- \n");
+            Console.WriteLine("Ingrese el nombre completo del archivo (con extension): ");
+            Console.WriteLine("Ejemplo: archivo.txt");
+            string archivo = Console.ReadLine();
 
+            if (!string.IsNullOrWhiteSpace(archivo))
+            {
+                if (validadorNombreArchivo(archivo))
+                {
+                    bool existe = gestor.ValidarExistencia(archivo);
+
+                    if (existe)
+                    {
+                        gestor.EliminarArchivo(archivo);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"ERROR: El archivo \"{archivo}\" no existe");
+                    }
+                }
+               
+            }
+            else
+            {
+                Console.WriteLine("ERROR: Debe ingresar un nombre de archivo");
+            }
+
+            Pause();
         }
 
         static void ConvertirEntreFormatos()
         {
+            Console.WriteLine("\n--------------------------CONVERTIR ENTRE FORMATOS-------------------------- \n");
+            Console.WriteLine("Ingrese el nombre completo del archivo (con extension): ");
+            Console.WriteLine("Ejemplo: archivo.txt");
 
+            string archivo = Console.ReadLine();
+
+            if (!string.IsNullOrWhiteSpace(archivo))
+            {
+                if (validadorNombreArchivo(archivo))
+                {
+                    bool existe = gestor.ValidarExistencia(archivo);
+
+                    if (!existe)
+                    {
+                        Console.WriteLine($"ERROR: El archivo \"{archivo}\" no existe");
+                        Pause();
+                        return;
+                    }
+
+                    string rutaOrigen = Path.IsPathRooted(archivo) ? archivo : Path.Combine(Environment.CurrentDirectory, archivo);
+                    
+                    string extOrigen = Path.GetExtension(rutaOrigen).ToLowerInvariant();
+
+                    var formatos = new List<string> { ".txt", ".csv", ".json", ".xml" };
+
+                    if (!formatos.Contains(extOrigen))
+                    {
+                        Console.WriteLine($"ERROR: Extensión de origen '{extOrigen}' no soportada.");
+                        Pause();
+                        return;
+                    }
+
+                    if(extOrigen == ".txt")
+                    {
+                        Console.WriteLine("\n FORMATOS POSIBLES DE CONVERSION: ");
+                        Console.WriteLine("\t -CSV ");
+                    }
+                    else if(extOrigen == ".csv")
+                    {
+                        Console.WriteLine("\n FORMATOS POSIBLES DE CONVERSION: ");
+                        Console.WriteLine("\t -TXT ");
+                    }
+                    else if(extOrigen == ".csv")
+                    {
+                        Console.WriteLine("\n FORMATOS POSIBLES DE CONVERSION: ");
+                        Console.WriteLine("\t -TXT ");
+                    }
+
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("ERROR: Debe ingresar un nombre de archivo");
+            }
+
+            Pause();
         }
 
         static void CrearReporte()
@@ -99,8 +183,35 @@ namespace GestorDeArchivosDeTexto
 
         }
 
+        static bool validadorNombreArchivo(string nombre)
+        {
+            // Validar que tenga extensión (un punto y algo mas)
 
-        public static void Pause()
+            if (!nombre.Contains('.') || nombre.StartsWith('.') || nombre.EndsWith('.'))
+            {
+                Console.WriteLine("ERROR: Debe ingresar un nombre de archivo con extension. Ej: datos.txt");
+
+                return false;
+            }
+
+            // Validar extension permitida
+
+            string extension = Path.GetExtension(nombre).ToLower(); //obtengo la extension
+
+            string[] extensionesValidas = { ".txt", ".csv", ".json", ".xml" }; //determino las extensiones validas segun la lista de requerimientos
+
+            if (!extensionesValidas.Contains(extension))
+            {
+                Console.WriteLine($"ERROR: La extension '{extension}' no es válida. Extensiones permitidas: TXT, CSV, JSON, XML.");
+                return false;
+            }
+
+
+            return true; // Todo OK
+        }
+        
+
+        static void Pause()
         {
             Console.WriteLine("\n");
             Console.WriteLine("Oprima una tecla para continuar");
