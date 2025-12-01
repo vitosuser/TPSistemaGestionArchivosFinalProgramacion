@@ -11,14 +11,46 @@ namespace GestorDeArchivosDeTexto
 {
     public class GestorArchivos
     {
-        public void CrearArchivo()
-        {
 
+        public void CrearBackup(string rutaOriginal)
+        {
+            try
+            {
+                if (File.Exists(rutaOriginal))
+                {
+                    string rutaBackup = rutaOriginal + ".bak";
+                    // true = sobrescribir si ya existe un backup viejo
+                    File.Copy(rutaOriginal, rutaBackup, true);
+                    Console.WriteLine($"✅ Backup creado: {Path.GetFileName(rutaBackup)}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"⚠️ Advertencia: No se pudo crear el backup. {ex.Message}");
+            }
+        }
+        public void GuardarArchivo(string rutaCompleta, string extension, List<Alumno> alumnos)
+        {
+            try
+            {
+                switch (extension)
+                {
+                    case ".txt": GuardarTxt(rutaCompleta, alumnos); break;
+                    case ".csv": GuardarCsv(rutaCompleta, alumnos); break;
+                    case ".json": GuardarJson(rutaCompleta, alumnos); break;
+                    case ".xml": GuardarXml(rutaCompleta, alumnos); break;
+                }
+                Console.WriteLine($"\n Archivo guardado correctamente en: {rutaCompleta}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"\n Error al guardar el archivo: {ex.Message}");
+            }
         }
 
         public void LeerArchivo()
         {
-
+            // metodo innecesario, utilizamos el metodo de vito
         }
 
         public void ModificarArchivo()
@@ -218,5 +250,52 @@ namespace GestorDeArchivosDeTexto
                 return (List<Alumno>)serializer.Deserialize(reader);
             }
         }
+
+
+        // === MÉTODOS DE ESCRITURA (Agregados para guardar archivos) ===
+        private void GuardarTxt(string ruta, List<Alumno> alumnos)
+        {
+            using (StreamWriter writer = new StreamWriter(ruta, false))
+            {
+                foreach (var alu in alumnos)
+                {
+                    // Formato: Legajo|Apellido|Nombre|Documento|Email|Telefono
+                    writer.WriteLine($"{alu.Legajo}|{alu.Apellido}|{alu.Nombre}|{alu.Documento}|{alu.Email}|{alu.Telefono}");
+                }
+            }
+        }
+
+        private void GuardarCsv(string ruta, List<Alumno> alumnos)
+        {
+            using (StreamWriter writer = new StreamWriter(ruta, false))
+            {
+                // Escribir Encabezado CSV
+                writer.WriteLine("Legajo,Apellido,Nombre,NumeroDocumento,Email,Telefono");
+
+                foreach (var alu in alumnos)
+                {
+                    // Formato separado por comas
+                    writer.WriteLine($"{alu.Legajo},{alu.Apellido},{alu.Nombre},{alu.Documento},{alu.Email},{alu.Telefono}");
+                }
+            }
+        }
+
+        private void GuardarJson(string ruta, List<Alumno> alumnos)
+        {
+            var opciones = new JsonSerializerOptions { WriteIndented = true };
+            string jsonString = JsonSerializer.Serialize(alumnos, opciones);
+            File.WriteAllText(ruta, jsonString);
+        }
+
+        private void GuardarXml(string ruta, List<Alumno> alumnos)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Alumno>), new XmlRootAttribute("Alumnos"));
+
+            using (StreamWriter writer = new StreamWriter(ruta))
+            {
+                serializer.Serialize(writer, alumnos);
+            }
+        }
+
     }
 }

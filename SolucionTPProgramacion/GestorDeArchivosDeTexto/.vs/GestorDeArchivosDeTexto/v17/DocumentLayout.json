@@ -1,0 +1,88 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\lausc\\OneDrive\\Escritorio\\TPSistemaGestionArchivosFinalProgramacion\\SolucionTPProgramacion\\GestorDeArchivosDeTexto\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3ED7F1E1-5690-46BA-BFA1-378DE360CAEE}|GestorDeArchivosDeTexto.csproj|c:\\users\\lausc\\onedrive\\escritorio\\tpsistemagestionarchivosfinalprogramacion\\soluciontpprogramacion\\gestordearchivosdetexto\\gestorarchivos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3ED7F1E1-5690-46BA-BFA1-378DE360CAEE}|GestorDeArchivosDeTexto.csproj|solutionrelative:gestorarchivos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3ED7F1E1-5690-46BA-BFA1-378DE360CAEE}|GestorDeArchivosDeTexto.csproj|c:\\users\\lausc\\onedrive\\escritorio\\tpsistemagestionarchivosfinalprogramacion\\soluciontpprogramacion\\gestordearchivosdetexto\\menu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3ED7F1E1-5690-46BA-BFA1-378DE360CAEE}|GestorDeArchivosDeTexto.csproj|solutionrelative:menu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3ED7F1E1-5690-46BA-BFA1-378DE360CAEE}|GestorDeArchivosDeTexto.csproj|c:\\users\\lausc\\onedrive\\escritorio\\tpsistemagestionarchivosfinalprogramacion\\soluciontpprogramacion\\gestordearchivosdetexto\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3ED7F1E1-5690-46BA-BFA1-378DE360CAEE}|GestorDeArchivosDeTexto.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3ED7F1E1-5690-46BA-BFA1-378DE360CAEE}|GestorDeArchivosDeTexto.csproj|c:\\users\\lausc\\onedrive\\escritorio\\tpsistemagestionarchivosfinalprogramacion\\soluciontpprogramacion\\gestordearchivosdetexto\\generadorreportes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3ED7F1E1-5690-46BA-BFA1-378DE360CAEE}|GestorDeArchivosDeTexto.csproj|solutionrelative:generadorreportes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\lausc\\OneDrive\\Escritorio\\TPSistemaGestionArchivosFinalProgramacion\\SolucionTPProgramacion\\GestorDeArchivosDeTexto\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\lausc\\OneDrive\\Escritorio\\TPSistemaGestionArchivosFinalProgramacion\\SolucionTPProgramacion\\GestorDeArchivosDeTexto\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-01T21:26:58.736Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "GeneradorReportes.cs",
+              "DocumentMoniker": "C:\\Users\\lausc\\OneDrive\\Escritorio\\TPSistemaGestionArchivosFinalProgramacion\\SolucionTPProgramacion\\GestorDeArchivosDeTexto\\GeneradorReportes.cs",
+              "RelativeDocumentMoniker": "GeneradorReportes.cs",
+              "ToolTip": "C:\\Users\\lausc\\OneDrive\\Escritorio\\TPSistemaGestionArchivosFinalProgramacion\\SolucionTPProgramacion\\GestorDeArchivosDeTexto\\GeneradorReportes.cs",
+              "RelativeToolTip": "GeneradorReportes.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-01T21:26:27.189Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Menu.cs",
+              "DocumentMoniker": "C:\\Users\\lausc\\OneDrive\\Escritorio\\TPSistemaGestionArchivosFinalProgramacion\\SolucionTPProgramacion\\GestorDeArchivosDeTexto\\Menu.cs",
+              "RelativeDocumentMoniker": "Menu.cs",
+              "ToolTip": "C:\\Users\\lausc\\OneDrive\\Escritorio\\TPSistemaGestionArchivosFinalProgramacion\\SolucionTPProgramacion\\GestorDeArchivosDeTexto\\Menu.cs",
+              "RelativeToolTip": "Menu.cs",
+              "ViewState": "AgIAAPYBAAAAAAAAAAAswEoCAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-01T21:26:16.799Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GestorArchivos.cs",
+              "DocumentMoniker": "C:\\Users\\lausc\\OneDrive\\Escritorio\\TPSistemaGestionArchivosFinalProgramacion\\SolucionTPProgramacion\\GestorDeArchivosDeTexto\\GestorArchivos.cs",
+              "RelativeDocumentMoniker": "GestorArchivos.cs",
+              "ToolTip": "C:\\Users\\lausc\\OneDrive\\Escritorio\\TPSistemaGestionArchivosFinalProgramacion\\SolucionTPProgramacion\\GestorDeArchivosDeTexto\\GestorArchivos.cs",
+              "RelativeToolTip": "GestorArchivos.cs",
+              "ViewState": "AgIAAAgBAAAAAAAAAAAuwC0BAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-01T21:24:18.095Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

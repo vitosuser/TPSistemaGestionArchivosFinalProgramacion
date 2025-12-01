@@ -1,0 +1,34 @@
+[
+  {
+    "Legajo": "11",
+    "Apellido": "fernandez",
+    "Nombre": "pedro",
+    "Documento": "2021",
+    "Email": "pedro",
+    "Telefono": "231"
+  },
+  {
+    "Legajo": "12",
+    "Apellido": "hernandez",
+    "Nombre": "juan",
+    "Documento": "2022",
+    "Email": "juan",
+    "Telefono": "342"
+  },
+  {
+    "Legajo": "13",
+    "Apellido": "perez",
+    "Nombre": "alberto",
+    "Documento": "2023",
+    "Email": "alberto",
+    "Telefono": "893"
+  },
+  {
+    "Legajo": "14",
+    "Apellido": "kees",
+    "Nombre": "ignacio",
+    "Documento": "2024",
+    "Email": "ignacio",
+    "Telefono": "847"
+  }
+]
