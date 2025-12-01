@@ -25,5 +25,11 @@ namespace GestorDeArchivosDeTexto.Models
             Email = email;
             Telefono = telefono;
         }
+
+        // Constructor vacio(necesario para la serializacion de JSON, XML y la inicialización con { } en la lectura de csv)
+        public Alumno()
+        {
+
+        }
     }
 }

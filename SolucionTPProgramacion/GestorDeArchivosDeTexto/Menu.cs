@@ -151,20 +151,88 @@ namespace GestorDeArchivosDeTexto
                         return;
                     }
 
+                    string formatoDestino;
+
                     if(extOrigen == ".txt")
                     {
-                        Console.WriteLine("\n FORMATOS POSIBLES DE CONVERSION: ");
-                        Console.WriteLine("\t -CSV ");
+                        Console.WriteLine($"\n Formato actual: {extOrigen}");
+                        Console.WriteLine("\n Seleccione formato de destino: ");
+                        Console.WriteLine("\t 1. CSV ");
+                        formatoDestino = Console.ReadLine();
+
+                        if (formatoDestino == "1")
+                        {
+
+                        }
+                        else
+                        {
+                            Console.WriteLine($"ERROR: Debe seleccionar un formato de destino valido.");
+                            Pause();
+                            return;
+                        }
                     }
                     else if(extOrigen == ".csv")
                     {
-                        Console.WriteLine("\n FORMATOS POSIBLES DE CONVERSION: ");
-                        Console.WriteLine("\t -TXT ");
+                        Console.WriteLine($"\n Formato actual: {extOrigen}");
+                        Console.WriteLine("\n Seleccione formato de destino: ");
+                        Console.WriteLine("\t 1. TXT ");
+                        Console.WriteLine("\t 2. JSON ");
+                        formatoDestino = Console.ReadLine();
+
+                        if (formatoDestino == "1" || formatoDestino == "2")
+                        {
+                            gestor.LeerAlumnosDesdeArchivo(extOrigen, rutaOrigen);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"ERROR: Debe seleccionar un formato de destino valido.");
+                            Pause();
+                            return;
+                        }
+
                     }
-                    else if(extOrigen == ".csv")
+                    else if(extOrigen == ".json")
                     {
-                        Console.WriteLine("\n FORMATOS POSIBLES DE CONVERSION: ");
-                        Console.WriteLine("\t -TXT ");
+                        Console.WriteLine($"\n Formato actual: {extOrigen}");
+                        Console.WriteLine("\n Seleccione formato de destino: ");
+                        Console.WriteLine("\t 1. CSV ");
+                        Console.WriteLine("\t 2. XML ");
+                        formatoDestino = Console.ReadLine();
+
+                        if (formatoDestino == "1")
+                        {
+
+                        }
+                        else if (formatoDestino == "2")
+                        {
+
+                        }
+                        else
+                        {
+                            Console.WriteLine($"ERROR: Debe seleccionar un formato de destino valido.");
+                            Pause();
+                            return;
+                        }
+
+                    }
+                    else if(extOrigen == ".xml")
+                    {
+                        Console.WriteLine($"\n Formato actual: {extOrigen}");
+                        Console.WriteLine("\n Seleccione formato de destino: ");
+                        Console.WriteLine("\t 1. JSON ");
+                        formatoDestino = Console.ReadLine();
+
+                        if(formatoDestino == "1")
+                        {
+                            
+                        }
+                        else
+                        {
+                            Console.WriteLine($"ERROR: Debe seleccionar un formato de destino valido.");
+                            Pause();
+                            return;
+                        }
+
                     }
 
                 }
@@ -211,7 +279,7 @@ namespace GestorDeArchivosDeTexto
         }
         
 
-        static void Pause()
+        public static void Pause()
         {
             Console.WriteLine("\n");
             Console.WriteLine("Oprima una tecla para continuar");
