@@ -1,0 +1,18 @@
+[
+  {
+    "Legajo": "1",
+    "Apellido": "s",
+    "Nombre": "l",
+    "Documento": "2",
+    "Email": "la@a.co",
+    "Telefono": "1"
+  },
+  {
+    "Legajo": "1",
+    "Apellido": "l",
+    "Nombre": "s",
+    "Documento": "01",
+    "Email": "la@f.co",
+    "Telefono": "2"
+  }
+]

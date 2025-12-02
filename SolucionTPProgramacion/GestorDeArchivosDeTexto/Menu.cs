@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace GestorDeArchivosDeTexto
 {
@@ -76,14 +77,7 @@ namespace GestorDeArchivosDeTexto
             Console.WriteLine("\n--------------------------CREAR NUEVO ARCHIVO-------------------------- \n");
 
             // pedimos el nombre
-            Console.Write("Ingrese el nombre del archivo (sin extensión): ");
-            string nombre = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(nombre))
-            {
-                Console.WriteLine("ERROR: El nombre no puede estar vacío.");
-                Pause();
-                return;
-            }
+            string nombre = SolicitarEntrada("Ingrese el nombre del archivo (sin extensión): ");
 
             // pedimos el formato
             Console.WriteLine("\nSeleccione el formato:");
@@ -91,10 +85,10 @@ namespace GestorDeArchivosDeTexto
             Console.WriteLine("2. CSV");
             Console.WriteLine("3. JSON");
             Console.WriteLine("4. XML");
-            Console.Write("Opción: ");
-            string opc = Console.ReadLine();
+            string opc = SolicitarEntrada("Opción: ", s => "1234".Contains(s) && s.Length == 1, "Opción inválida.");
 
             string extension = "";
+            
             switch (opc)
             {
                 case "1": extension = ".txt"; break;
@@ -108,42 +102,26 @@ namespace GestorDeArchivosDeTexto
             }
 
             // pedimos cantidad y cargar lista
-            Console.Write("\n¿Cuántos alumnos desea registrar?: ");
-            if (!int.TryParse(Console.ReadLine(), out int cantidad) || cantidad <= 0)
-            {
-                Console.WriteLine("Cantidad inválida.");
-                Pause();
-                return;
-            }
+            string cantStr = SolicitarEntrada("\n¿Cuántos alumnos desea registrar?: ", EsSoloNumeros, "Debe ser un número.");
+            int cantidad = int.Parse(cantStr);
 
             List<Alumno> nuevosAlumnos = new List<Alumno>();
 
             for (int i = 0; i < cantidad; i++)
             {
                 Console.WriteLine($"\n--- Cargando Alumno {i + 1}/{cantidad} ---");
-                // usamos el constructor
-                Console.Write("Legajo: "); 
-                string legajo = Console.ReadLine();
 
-                Console.Write("Apellido: "); 
-                string apellido = Console.ReadLine();
-
-                Console.Write("Nombre: "); 
-                string name = Console.ReadLine();
-
-                Console.Write("Documento: "); 
-                string documento = Console.ReadLine();
-
-                Console.Write("Email: "); 
-                string mail = Console.ReadLine();
-
-                Console.Write("Teléfono: "); 
-                string tel = Console.ReadLine();
+                string legajo = SolicitarEntrada("Legajo: ", EsSoloNumeros, "Solo números.");
+                string apellido = SolicitarEntrada("Apellido: ");
+                string name = SolicitarEntrada("Nombre: ");
+                string documento = SolicitarEntrada("Documento: ", EsSoloNumeros, "Solo números.");
+                string mail = SolicitarEntrada("Email: ", EsEmailValido, "Formato inválido (ej: a@b.com).");
+                string tel = SolicitarEntrada("Teléfono: ", EsSoloNumeros, "Solo números.");
 
                 nuevosAlumnos.Add(new Alumno(legajo, apellido, name, documento, mail, tel));
             }
 
-            // 4. llamamos a la funcion del gestor
+            // 4. Guardar
             string rutaCompleta = Path.Combine(Environment.CurrentDirectory, nombre + extension);
             gestor.GuardarArchivo(rutaCompleta, extension, nuevosAlumnos);
 
@@ -155,26 +133,12 @@ namespace GestorDeArchivosDeTexto
             Console.WriteLine("\n--------------------------LEER ARCHIVO-------------------------- \n");
 
             // pedir el nombre con extension
-            Console.WriteLine("Ingrese el nombre completo del archivo (con extensión):");
-            Console.WriteLine("Ejemplo: alumnos.json");
-            string archivo = Console.ReadLine();
+            string archivo = SolicitarEntrada("Ingrese el nombre completo (ej: alumnos.json): ");
 
-            // validar que se ingrese un nombre
-            if (string.IsNullOrWhiteSpace(archivo))
-            {
-                Console.WriteLine("ERROR: Debe ingresar un nombre.");
-                Pause();
-                return;
-            }
+            // validar el nombre
+            if (!validadorNombreArchivo(archivo)) { Pause(); return; }
 
-            // validamos nombre
-            if (!validadorNombreArchivo(archivo))
-            {
-                Pause();
-                return;
-            }
-
-            // validamos la existencia del archivo
+            // validar existencia
             if (!gestor.ValidarExistencia(archivo))
             {
                 Console.WriteLine($"ERROR: El archivo \"{archivo}\" no existe.");
@@ -182,7 +146,7 @@ namespace GestorDeArchivosDeTexto
                 return;
             }
 
-            // preparamos los datos que pide el metodo de LeerAlumnosDesdeArchivo
+            // preparamos los datos para el Gestor
             string ruta = Path.Combine(Environment.CurrentDirectory, archivo);
             string extension = Path.GetExtension(archivo).ToLower();
 
@@ -190,45 +154,12 @@ namespace GestorDeArchivosDeTexto
 
             if (lista.Count == 0)
             {
-                Console.WriteLine("El archivo está vacío o no se pudieron leer datos correctamente.");
-                Pause();
-                return;
+                Console.WriteLine("El archivo está vacío o no se pudieron leer datos.");
             }
-
-            Console.WriteLine("\n");
-            // encabezado de la tabla
-            Console.WriteLine("=".PadRight(110, '='));
-            Console.WriteLine($"| {"Legajo".PadRight(10)} | {"Apellido".PadRight(15)} | {"Nombre".PadRight(20)} | {"Documento".PadRight(12)} | {"Email".PadRight(30)} |");
-            Console.WriteLine("=".PadRight(110, '='));
-
-            int contador = 0;
-            foreach (var alumnos in lista)
+            else
             {
-                Console.Write("| ");
-                // usamos PadRight para que las columnas queden alineadas
-                Console.Write($"{alumnos.Legajo.PadRight(10)} | ");
-                Console.Write($"{alumnos.Apellido.PadRight(15)} | ");
-                Console.Write($"{alumnos.Nombre.PadRight(20)} | ");
-                Console.Write($"{alumnos.Documento.PadRight(12)} | ");
-                Console.Write($"{alumnos.Email.PadRight(30)} |");
-                Console.WriteLine();
-
-                contador++;
-
-                // paginación cada 20 registros
-                if (contador % 20 == 0)
-                {
-                    Console.WriteLine("=".PadRight(110, '='));
-                    Console.WriteLine($"--- Mostrando {contador} de {lista.Count}. Presione una tecla para continuar ---");
-                    Console.ReadKey();
-                    Console.WriteLine("\n");
-                    // repetimos el encabezado para que no se pierda
-                    Console.WriteLine($"| {"Legajo".PadRight(10)} | {"Apellido".PadRight(15)} | {"Nombre".PadRight(20)} | {"Documento".PadRight(12)} | {"Email".PadRight(30)} |");
-                    Console.WriteLine("=".PadRight(110, '='));
-                }
+                MostrarTabla(lista);
             }
-            Console.WriteLine("=".PadRight(110, '='));
-            Console.WriteLine($"Total de alumnos: {lista.Count}");
 
             Pause();
         }
@@ -238,10 +169,9 @@ namespace GestorDeArchivosDeTexto
             Console.WriteLine("\n--------------------------MODIFICAR ARCHIVO-------------------------- \n");
 
             // solicitamos el arhchivo
-            Console.WriteLine("Ingrese el nombre completo del archivo a modificar (ej: alumnos.json):");
-            string archivo = Console.ReadLine();
+            string archivo = SolicitarEntrada("Ingrese el nombre completo del archivo a modificar (ej: alumnos.json): ");
 
-            if (string.IsNullOrWhiteSpace(archivo) || !validadorNombreArchivo(archivo)) { Pause(); return; }
+            if (!validadorNombreArchivo(archivo)) { Pause(); return; }
             if (!gestor.ValidarExistencia(archivo))
             {
                 Console.WriteLine($"ERROR: El archivo \"{archivo}\" no existe.");
@@ -249,23 +179,15 @@ namespace GestorDeArchivosDeTexto
                 return;
             }
 
-            // cargamos en memoria
             string ruta = Path.Combine(Environment.CurrentDirectory, archivo);
             string extension = Path.GetExtension(archivo).ToLower();
 
             List<Alumno> listaMemoria = gestor.LeerAlumnosDesdeArchivo(extension, ruta);
 
-            if (listaMemoria.Count == 0)
-            {
-                Console.WriteLine("El archivo está vacío o no se puede leer. Agregue alumnos primero.");
-                // No retornamos, permitimos que agregue nuevos si quiere
-            }
-            else
-            {
-                Console.WriteLine($"\n Se cargaron {listaMemoria.Count} alumnos en memoria.");
-            }
+            if (listaMemoria.Count == 0) Console.WriteLine("El archivo está vacío. Puede agregar alumnos nuevos.");
+            else Console.WriteLine($"\n✅ Se cargaron {listaMemoria.Count} alumnos en memoria.");
 
-            // 3. SUB-MENÚ DE MODIFICACIÓN
+            // SUBMENU DE MODIFICACIÓN
             bool guardarYSalir = false;
             bool cancelar = false;
 
@@ -280,114 +202,88 @@ namespace GestorDeArchivosDeTexto
                 Console.WriteLine("4. GUARDAR CAMBIOS Y SALIR");
                 Console.WriteLine("5. CANCELAR (Salir sin guardar)");
                 Console.WriteLine("=================================");
-                Console.Write("Opción: ");
-                string opc = Console.ReadLine();
+
+                string opc = SolicitarEntrada("Opción: ");
 
                 switch (opc)
                 {
                     case "1":
                         Console.WriteLine("\n--- Nuevo Alumno ---");
-                        Console.Write("Legajo: "); string l = Console.ReadLine();
-                        // validar que el legajo no exista ya en la lista
-                        if (listaMemoria.Any(a => a.Legajo == l))
+                        string leg = SolicitarEntrada("Legajo: ", EsSoloNumeros, "Solo números.");
+
+                        if (listaMemoria.Any(a => a.Legajo == leg))
                         {
-                            Console.WriteLine("ERROR: Ya existe un alumno con ese Legajo en la lista.");
+                            Console.WriteLine("ERROR: Ya existe un alumno con ese Legajo.");
                             Pause();
                             break;
                         }
-                        Console.Write("Apellido: "); string a = Console.ReadLine();
-                        Console.Write("Nombre: "); string n = Console.ReadLine();
-                        Console.Write("Documento: "); string d = Console.ReadLine();
-                        Console.Write("Email: "); string e = Console.ReadLine();
-                        Console.Write("Teléfono: "); string t = Console.ReadLine();
 
-                        listaMemoria.Add(new Alumno(l, a, n, d, e, t));
-                        Console.WriteLine("Alumno agregado a la lista temporal.");
+                        listaMemoria.Add(new Alumno(
+                            leg,
+                            SolicitarEntrada("Apellido: "),
+                            SolicitarEntrada("Nombre: "),
+                            SolicitarEntrada("Documento: ", EsSoloNumeros, "Solo números."),
+                            SolicitarEntrada("Email: ", EsEmailValido, "Email inválido."),
+                            SolicitarEntrada("Teléfono: ", EsSoloNumeros, "Solo números.")
+                        ));
+                        Console.WriteLine("Alumno agregado.");
                         Pause();
                         break;
 
-                    case "2": // MODIFICAR
-                        Console.Write("\nIngrese el Legajo del alumno a editar: ");
-                        string legBusq = Console.ReadLine();
+                    case "2":
+                        string legBusq = SolicitarEntrada("Ingrese el Legajo a editar: ");
+                        Alumno alu = listaMemoria.FirstOrDefault(x => x.Legajo == legBusq);
 
-                        // buscamos el objeto en la lista
-                        Alumno aluEdit = listaMemoria.FirstOrDefault(x => x.Legajo == legBusq);
-
-                        if (aluEdit != null)
+                        if (alu != null)
                         {
-                            Console.WriteLine("\n--- Deje vacío y presione Enter para mantener el valor actual ---");
+                            Console.WriteLine("\n(Deje vacío y presione Enter para mantener el valor actual)");
 
-                            Console.Write($"Apellido ({aluEdit.Apellido}): ");
-                            string input = Console.ReadLine();
-                            if (!string.IsNullOrWhiteSpace(input)) aluEdit.Apellido = input;
+                            alu.Apellido = SolicitarEntradaOpcional($"Apellido ({alu.Apellido}): ", alu.Apellido);
+                            alu.Nombre = SolicitarEntradaOpcional($"Nombre ({alu.Nombre}): ", alu.Nombre);
+                            alu.Documento = SolicitarEntradaOpcional($"Documento ({alu.Documento}): ", alu.Documento, EsSoloNumeros);
+                            alu.Email = SolicitarEntradaOpcional($"Email ({alu.Email}): ", alu.Email, EsEmailValido);
+                            alu.Telefono = SolicitarEntradaOpcional($"Teléfono ({alu.Telefono}): ", alu.Telefono, EsSoloNumeros);
 
-                            Console.Write($"Nombre ({aluEdit.Nombre}): ");
-                            input = Console.ReadLine();
-                            if (!string.IsNullOrWhiteSpace(input)) aluEdit.Nombre = input;
-
-                            Console.Write($"Documento ({aluEdit.Documento}): ");
-                            input = Console.ReadLine();
-                            if (!string.IsNullOrWhiteSpace(input)) aluEdit.Documento = input;
-
-                            Console.Write($"Email ({aluEdit.Email}): ");
-                            input = Console.ReadLine();
-                            if (!string.IsNullOrWhiteSpace(input)) aluEdit.Email = input;
-
-                            Console.Write($"Teléfono ({aluEdit.Telefono}): ");
-                            input = Console.ReadLine();
-                            if (!string.IsNullOrWhiteSpace(input)) aluEdit.Telefono = input;
-
-                            Console.WriteLine("Registro actualizado en memoria.");
+                            Console.WriteLine("✅ Registro actualizado en memoria.");
                         }
-                        else
-                        {
-                            Console.WriteLine("No se encontró ningún alumno con ese Legajo.");
-                        }
+                        else Console.WriteLine("❌ No se encontró ese Legajo.");
+
                         Pause();
                         break;
 
-                    case "3": // ELIMINAR
-                        Console.Write("\nIngrese el Legajo del alumno a eliminar: ");
-                        string legDel = Console.ReadLine();
+                    case "3":
+                        string legDel = SolicitarEntrada("Ingrese el Legajo a eliminar: ");
                         Alumno aluDel = listaMemoria.FirstOrDefault(x => x.Legajo == legDel);
 
                         if (aluDel != null)
                         {
-                            Console.WriteLine($"¿Seguro desea eliminar a {aluDel.Apellido}, {aluDel.Nombre}? (S/N)");
+                            Console.WriteLine($"¿Eliminar a {aluDel.Apellido}, {aluDel.Nombre}? (S/N)");
                             if (Console.ReadLine().ToUpper() == "S")
                             {
                                 listaMemoria.Remove(aluDel);
-                                Console.WriteLine("Alumno eliminado de la lista temporal.");
+                                Console.WriteLine("✅ Eliminado.");
                             }
                         }
-                        else
-                        {
-                            Console.WriteLine("No se encontró ese Legajo.");
-                        }
+                        else Console.WriteLine("❌ No se encontró ese Legajo.");
                         Pause();
                         break;
 
-                    case "4": // GUARDAR
-                        Console.WriteLine("\nGuardando cambios...");
-
-                        // A. Crear Backup
+                    case "4":
                         gestor.CrearBackup(ruta);
-
-                        // B. Sobrescribir archivo original
                         gestor.GuardarArchivo(ruta, extension, listaMemoria);
-
                         guardarYSalir = true;
                         Pause();
                         break;
 
-                    case "5": // CANCELAR
-                        Console.WriteLine("\nCambios descartados. Volviendo al menú principal...");
+                    case "5":
+                        Console.WriteLine("\nCambios descartados.");
                         cancelar = true;
                         Pause();
                         break;
 
                     default:
                         Console.WriteLine("Opción inválida");
+                        Pause();
                         break;
                 }
             }
@@ -585,7 +481,92 @@ namespace GestorDeArchivosDeTexto
 
             return true; // Todo OK
         }
-        
+
+        static bool EsEmailValido(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email)) return false;
+            try
+            {
+                return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        static bool EsSoloNumeros(string valor)
+        {
+            if (string.IsNullOrWhiteSpace(valor)) return false;
+            // Verifica que toda la cadena sean dígitos del 0 al 9
+            return Regex.IsMatch(valor, @"^\d+$");
+        }
+
+        // === MÉTODOS AUXILIARES PARA LIMPIAR CÓDIGO ===
+        static string SolicitarEntrada(string mensaje, Func<string, bool> validador = null, string error = "Valor inválido.")
+        {
+            string input;
+            do
+            {
+                Console.Write(mensaje);
+                input = Console.ReadLine();
+
+                // Si hay validador y falla, o si es vacío (y no hay validador específico), mostramos error
+                if ((validador != null && !validador(input)) || (validador == null && string.IsNullOrWhiteSpace(input)))
+                {
+                    Console.WriteLine("ERROR: " + error);
+                    input = null; // Forzamos repetir el bucle
+                }
+            } while (input == null);
+
+            return input;
+        }
+        static string SolicitarEntradaOpcional(string mensaje, string valorActual, Func<string, bool> validador = null, string error = "Valor inválido.")
+        {
+            string input;
+            do
+            {
+                Console.Write(mensaje);
+                input = Console.ReadLine();
+
+                // Si deja vacío, retornamos el valor original (significa "no cambiar")
+                if (string.IsNullOrWhiteSpace(input)) return valorActual;
+
+                // Si escribió algo, validamos
+                if (validador != null && !validador(input))
+                {
+                    Console.WriteLine("ERROR: " + error);
+                    input = null; // Forzamos repetir el bucle
+                }
+            } while (input == null);
+
+            return input;
+        }
+
+        static void MostrarTabla(List<Alumno> lista)
+        {
+            Console.WriteLine("\n");
+            Console.WriteLine("=".PadRight(110, '='));
+            Console.WriteLine($"| {"Legajo".PadRight(10)} | {"Apellido".PadRight(15)} | {"Nombre".PadRight(20)} | {"Documento".PadRight(12)} | {"Email".PadRight(30)} |");
+            Console.WriteLine("=".PadRight(110, '='));
+
+            int contador = 0;
+            foreach (var alu in lista)
+            {
+                Console.WriteLine($"| {alu.Legajo.PadRight(10)} | {alu.Apellido.PadRight(15)} | {alu.Nombre.PadRight(20)} | {alu.Documento.PadRight(12)} | {alu.Email.PadRight(30)} |");
+                contador++;
+
+                if (contador % 20 == 0)
+                {
+                    Console.WriteLine("=".PadRight(110, '='));
+                    Console.WriteLine($"--- Mostrando {contador}/{lista.Count}. Tecla para seguir ---");
+                    Console.ReadKey();
+                    Console.WriteLine();
+                }
+            }
+            Console.WriteLine("=".PadRight(110, '='));
+            Console.WriteLine($"Total: {lista.Count}");
+        }
 
         public static void Pause()
         {
