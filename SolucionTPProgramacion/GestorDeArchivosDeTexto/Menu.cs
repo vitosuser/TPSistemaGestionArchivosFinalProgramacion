@@ -75,7 +75,7 @@ namespace GestorDeArchivosDeTexto
         {
             Console.WriteLine("\n--------------------------CREAR NUEVO ARCHIVO-------------------------- \n");
 
-            // 1. pedimos el nombre
+            // pedimos el nombre
             Console.Write("Ingrese el nombre del archivo (sin extensión): ");
             string nombre = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(nombre))
@@ -85,7 +85,7 @@ namespace GestorDeArchivosDeTexto
                 return;
             }
 
-            // 2. pedimos el formato
+            // pedimos el formato
             Console.WriteLine("\nSeleccione el formato:");
             Console.WriteLine("1. TXT");
             Console.WriteLine("2. CSV");
@@ -107,7 +107,7 @@ namespace GestorDeArchivosDeTexto
                     return;
             }
 
-            // 3. pedimos cantidad y cargar lista
+            // pedimos cantidad y cargar lista
             Console.Write("\n¿Cuántos alumnos desea registrar?: ");
             if (!int.TryParse(Console.ReadLine(), out int cantidad) || cantidad <= 0)
             {
@@ -122,14 +122,25 @@ namespace GestorDeArchivosDeTexto
             {
                 Console.WriteLine($"\n--- Cargando Alumno {i + 1}/{cantidad} ---");
                 // usamos el constructor
-                Console.Write("Legajo: "); string leg = Console.ReadLine();
-                Console.Write("Apellido: "); string ape = Console.ReadLine();
-                Console.Write("Nombre: "); string nom = Console.ReadLine();
-                Console.Write("Documento: "); string doc = Console.ReadLine();
-                Console.Write("Email: "); string mail = Console.ReadLine();
-                Console.Write("Teléfono: "); string tel = Console.ReadLine();
+                Console.Write("Legajo: "); 
+                string legajo = Console.ReadLine();
 
-                nuevosAlumnos.Add(new Alumno(leg, ape, nom, doc, mail, tel));
+                Console.Write("Apellido: "); 
+                string apellido = Console.ReadLine();
+
+                Console.Write("Nombre: "); 
+                string name = Console.ReadLine();
+
+                Console.Write("Documento: "); 
+                string documento = Console.ReadLine();
+
+                Console.Write("Email: "); 
+                string mail = Console.ReadLine();
+
+                Console.Write("Teléfono: "); 
+                string tel = Console.ReadLine();
+
+                nuevosAlumnos.Add(new Alumno(legajo, apellido, name, documento, mail, tel));
             }
 
             // 4. llamamos a la funcion del gestor
@@ -143,7 +154,7 @@ namespace GestorDeArchivosDeTexto
         {
             Console.WriteLine("\n--------------------------LEER ARCHIVO-------------------------- \n");
 
-            // 1. pedir el nombre con extension
+            // pedir el nombre con extension
             Console.WriteLine("Ingrese el nombre completo del archivo (con extensión):");
             Console.WriteLine("Ejemplo: alumnos.json");
             string archivo = Console.ReadLine();
@@ -156,14 +167,14 @@ namespace GestorDeArchivosDeTexto
                 return;
             }
 
-            // validamos con el metodo de vito
+            // validamos nombre
             if (!validadorNombreArchivo(archivo))
             {
                 Pause();
                 return;
             }
 
-            // validamos con el gestor
+            // validamos la existencia del archivo
             if (!gestor.ValidarExistencia(archivo))
             {
                 Console.WriteLine($"ERROR: El archivo \"{archivo}\" no existe.");
@@ -191,15 +202,15 @@ namespace GestorDeArchivosDeTexto
             Console.WriteLine("=".PadRight(110, '='));
 
             int contador = 0;
-            foreach (var alu in lista)
+            foreach (var alumnos in lista)
             {
                 Console.Write("| ");
                 // usamos PadRight para que las columnas queden alineadas
-                Console.Write($"{alu.Legajo.PadRight(10)} | ");
-                Console.Write($"{alu.Apellido.PadRight(15)} | ");
-                Console.Write($"{alu.Nombre.PadRight(20)} | ");
-                Console.Write($"{alu.Documento.PadRight(12)} | ");
-                Console.Write($"{alu.Email.PadRight(30)} |");
+                Console.Write($"{alumnos.Legajo.PadRight(10)} | ");
+                Console.Write($"{alumnos.Apellido.PadRight(15)} | ");
+                Console.Write($"{alumnos.Nombre.PadRight(20)} | ");
+                Console.Write($"{alumnos.Documento.PadRight(12)} | ");
+                Console.Write($"{alumnos.Email.PadRight(30)} |");
                 Console.WriteLine();
 
                 contador++;

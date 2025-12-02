@@ -21,12 +21,12 @@ namespace GestorDeArchivosDeTexto
                     string rutaBackup = rutaOriginal + ".bak";
                     // true = sobrescribir si ya existe un backup viejo
                     File.Copy(rutaOriginal, rutaBackup, true);
-                    Console.WriteLine($"✅ Backup creado: {Path.GetFileName(rutaBackup)}");
+                    Console.WriteLine($"Backup creado: {Path.GetFileName(rutaBackup)}");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"⚠️ Advertencia: No se pudo crear el backup. {ex.Message}");
+                Console.WriteLine($"ERROR: No se pudo crear el backup. {ex.Message}");
             }
         }
         public void GuardarArchivo(string rutaCompleta, string extension, List<Alumno> alumnos)
