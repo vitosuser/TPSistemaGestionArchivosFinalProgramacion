@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Alumnos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Alumno>
+    <Legajo>1234</Legajo>
+    <Apellido>barberis</Apellido>
+    <Nombre>luchi</Nombre>
+    <Documento>00000000</Documento>
+    <Email>dasddasdas@323232</Email>
+    <Telefono>3476 1234533</Telefono>
+  </Alumno>
+</Alumnos>
