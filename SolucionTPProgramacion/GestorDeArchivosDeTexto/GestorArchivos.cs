@@ -252,7 +252,7 @@ namespace GestorDeArchivosDeTexto
         }
 
 
-        // === MÉTODOS DE ESCRITURA (Agregados para guardar archivos) ===
+        // MÉTODOS DE ESCRITURA (Agregados para guardar archivos) 
         private void GuardarTxt(string ruta, List<Alumno> alumnos)
         {
             using (StreamWriter writer = new StreamWriter(ruta, false))

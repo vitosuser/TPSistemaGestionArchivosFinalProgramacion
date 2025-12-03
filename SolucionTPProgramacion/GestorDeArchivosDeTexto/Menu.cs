@@ -11,6 +11,8 @@ namespace GestorDeArchivosDeTexto
     public class Menu
     {
         static GestorArchivos gestor = new GestorArchivos();
+        static GeneradorReportes generador = new GeneradorReportes();
+
         public static void menuPrincipal()
         {
             bool salir = false;
@@ -355,6 +357,13 @@ namespace GestorDeArchivosDeTexto
                         return;
                     }
 
+                    //lectura - deserializacion
+
+                    List<Alumno> listaAlumnos = gestor.LeerAlumnosDesdeArchivo(extOrigen, rutaOrigen);
+
+                    Console.WriteLine($"INFO: Se cargaron {listaAlumnos.Count} alumnos del archivo de origen ({archivo})");
+
+                    string extDestino = "";
                     string formatoDestino;
 
                     if(extOrigen == ".txt")
@@ -366,14 +375,9 @@ namespace GestorDeArchivosDeTexto
 
                         if (formatoDestino == "1")
                         {
+                            extDestino = ".csv";
+                        }
 
-                        }
-                        else
-                        {
-                            Console.WriteLine($"ERROR: Debe seleccionar un formato de destino valido.");
-                            Pause();
-                            return;
-                        }
                     }
                     else if(extOrigen == ".csv")
                     {
@@ -383,15 +387,14 @@ namespace GestorDeArchivosDeTexto
                         Console.WriteLine("\t 2. JSON ");
                         formatoDestino = Console.ReadLine();
 
-                        if (formatoDestino == "1" || formatoDestino == "2")
+                        if (formatoDestino == "1")
                         {
-                            gestor.LeerAlumnosDesdeArchivo(extOrigen, rutaOrigen);
+                            extDestino = ".txt";
                         }
-                        else
+                        else if(formatoDestino == "2")
                         {
-                            Console.WriteLine($"ERROR: Debe seleccionar un formato de destino valido.");
-                            Pause();
-                            return;
+                            extDestino = ".json";
+
                         }
 
                     }
@@ -405,17 +408,13 @@ namespace GestorDeArchivosDeTexto
 
                         if (formatoDestino == "1")
                         {
+                            extDestino = ".csv";
 
                         }
                         else if (formatoDestino == "2")
                         {
+                            extDestino = ".xml";
 
-                        }
-                        else
-                        {
-                            Console.WriteLine($"ERROR: Debe seleccionar un formato de destino valido.");
-                            Pause();
-                            return;
                         }
 
                     }
@@ -428,17 +427,37 @@ namespace GestorDeArchivosDeTexto
 
                         if(formatoDestino == "1")
                         {
-                            
-                        }
-                        else
-                        {
-                            Console.WriteLine($"ERROR: Debe seleccionar un formato de destino valido.");
-                            Pause();
-                            return;
+                            extDestino = ".json";
+
                         }
 
                     }
 
+                    if(string.IsNullOrWhiteSpace(extDestino))
+                    {
+                        Console.WriteLine($"ERROR: Debe seleccionar un formato de destino valido.");
+                        Pause();
+                        return;
+                    }
+
+                    //pido el nombre del archivo de destino
+                    Console.WriteLine("\nIngrese el nombre del archivo de destino (sin extension): ");
+                    string nombreDestino = Console.ReadLine();
+
+                    if(string.IsNullOrEmpty(nombreDestino))
+                    {
+                        Console.WriteLine("ERROR: El nombre del archivo de destino no puede estar vacío.");
+                        Pause();
+                        return;
+                    }
+
+                    string rutaDestino = Path.Combine(Environment.CurrentDirectory, $"{nombreDestino}{extDestino}");
+                    //Escritura - serializacion
+                    gestor.GuardarArchivo(rutaDestino, extDestino, listaAlumnos);
+
+                    Console.WriteLine($"\nResumen de Conversión:");
+                    Console.WriteLine($"\tArchivo origen: {archivo} ({listaAlumnos.Count} registros)");
+                    Console.WriteLine($"\tArchivo destino: {nombreDestino}{extDestino}({listaAlumnos.Count} registros)");
                 }
 
             }
@@ -452,7 +471,86 @@ namespace GestorDeArchivosDeTexto
 
         static void CrearReporte()
         {
+            Console.WriteLine("\n--------------------------REPORTE CON CORTE DE CONTROL-------------------------- \n");
 
+            Console.Write("Ingrese el nombre completo del archivo fuente (con extension): ");
+            Console.Write("Ejemplo: datos.csv: ");
+            string archivo = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(archivo))
+            {
+                Console.WriteLine("ERROR: Debe ingresar un nombre de archivo.");
+                Pause();
+                return;
+            }
+
+            if (!validadorNombreArchivo(archivo))
+            {
+                Pause();
+                return;
+            }
+
+            if (!gestor.ValidarExistencia(archivo))
+            {
+                Console.WriteLine($"ERROR: El archivo \"{archivo}\" no existe.");
+                Pause();
+                return;
+            }
+
+            string rutaOrigen = Path.Combine(Environment.CurrentDirectory, archivo);
+            string extOrigen = Path.GetExtension(rutaOrigen).ToLowerInvariant();
+
+            var formatos = new List<string> { ".txt", ".csv", ".json", ".xml" };
+
+            if (!formatos.Contains(extOrigen))
+            {
+                Console.WriteLine($"ERROR: Extensión de origen '{extOrigen}' no soportada para la lectura.");
+                Pause();
+                return;
+            }
+
+            List<Alumno> listaAlumnos = gestor.LeerAlumnosDesdeArchivo(extOrigen, rutaOrigen);
+
+
+            Console.WriteLine($"\nINFO: Se cargaron {listaAlumnos.Count} alumnos del archivo de origen.");
+
+            string reporte = generador.GenerarReporte(listaAlumnos);
+
+            // 5. Mostrar el reporte por pantalla
+            Console.WriteLine("\n" + reporte);
+
+            // 6. Opción de guardar el reporte
+            Console.WriteLine("\n¿Desea guardar este reporte en un archivo .TXT? (S/N)");
+            string respuesta = Console.ReadLine().Trim().ToUpper();
+
+            if (respuesta == "S")
+            {
+                Console.Write("Ingrese el nombre para el archivo del reporte (sin extensión): ");
+                string nombreReporte = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(nombreReporte))
+                {
+                    Console.WriteLine("ERROR: Nombre de archivo de reporte no válido. No se guardará.");
+                }
+                else
+                {
+                    string rutaReporte = Path.Combine(Environment.CurrentDirectory, $"{nombreReporte}.txt");
+
+                    try
+                    {
+                        // Guardamos la cadena de texto directamente
+
+                        File.WriteAllText(rutaReporte, reporte, Encoding.UTF8);
+                        Console.WriteLine($"\nReporte guardado correctamente en: {rutaReporte}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"\nError al guardar el reporte: {ex.Message}");
+                    }
+                }
+            }
+
+            Pause();
         }
 
         static bool validadorNombreArchivo(string nombre)
