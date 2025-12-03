@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GestorDeArchivosDeTexto")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b0eb7b68af8492f97daf16595d8e47cda8473016")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9f07feed91e7042d30f3dd5fa1a9cb18af16e59b")]
 [assembly: System.Reflection.AssemblyProductAttribute("GestorDeArchivosDeTexto")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GestorDeArchivosDeTexto")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
